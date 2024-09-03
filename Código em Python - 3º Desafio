@@ -1,0 +1,135 @@
+class Cliente:
+    def __init__(self, nome, cpf):
+        self.nome = nome
+        self.cpf = cpf
+        self.contas = []
+
+    def adicionar_conta(self, conta):
+        self.contas.append(conta)
+
+
+class ContaBancaria:
+    def __init__(self, numero):
+        self.numero = numero
+        self.saldo = 0
+        self.transacoes = []
+
+    def depositar(self, valor):
+        if valor > 0:
+            self.saldo += valor
+            self.transacoes.append(f"Depósito: +R$ {valor:.2f}")
+            print(f"Depósito de R$ {valor:.2f} realizado com sucesso.")
+        else:
+            print("O valor do depósito deve ser positivo.")
+
+    def sacar(self, valor):
+        if 0 < valor <= self.saldo:
+            self.saldo -= valor
+            self.transacoes.append(f"Saque: -R$ {valor:.2f}")
+            print(f"Saque de R$ {valor:.2f} realizado com sucesso.")
+        elif valor > self.saldo:
+            print("Saldo insuficiente para realizar o saque.")
+        else:
+            print("O valor do saque deve ser positivo.")
+
+    def extrato(self):
+        print(f"\n=== Extrato da Conta {self.numero} ===")
+        if not self.transacoes:
+            print("Nenhuma transação realizada.")
+        else:
+            for transacao in self.transacoes:
+                print(transacao)
+        print(f"Saldo atual: R$ {self.saldo:.2f}")
+        print("========================\n")
+
+
+class Banco:
+    def __init__(self):
+        self.clientes = []
+        self.contas = []
+
+    def adicionar_cliente(self, cliente):
+        self.clientes.append(cliente)
+
+    def adicionar_conta(self, conta):
+        self.contas.append(conta)
+
+    def buscar_cliente(self, cpf):
+        for cliente in self.clientes:
+            if cliente.cpf == cpf:
+                return cliente
+        return None
+
+    def buscar_conta(self, numero):
+        for conta in self.contas:
+            if conta.numero == numero:
+                return conta
+        return None
+
+def menu():
+    banco = Banco()
+
+    while True:
+        print("\n=== Sistema Bancário ===")
+        print("1. Criar Cliente")
+        print("2. Criar Conta")
+        print("3. Depósito")
+        print("4. Saque")
+        print("5. Extrato")
+        print("6. Sair")
+        opcao = input("Escolha uma opção: ")
+
+        if opcao == "1":
+            nome = input("Informe o nome do cliente: ")
+            cpf = input("Informe o CPF do cliente: ")
+            cliente = Cliente(nome, cpf)
+            banco.adicionar_cliente(cliente)
+            print(f"Cliente {nome} criado com sucesso.")
+
+        elif opcao == "2":
+            cpf = input("Informe o CPF do cliente: ")
+            cliente = banco.buscar_cliente(cpf)
+            if cliente:
+                numero_conta = input("Informe o número da conta: ")
+                conta = ContaBancaria(numero_conta)
+                cliente.adicionar_conta(conta)
+                banco.adicionar_conta(conta)
+                print(f"Conta {numero_conta} criada com sucesso para o cliente {cliente.nome}.")
+            else:
+                print("Cliente não encontrado.")
+
+        elif opcao == "3":
+            numero_conta = input("Informe o número da conta: ")
+            conta = banco.buscar_conta(numero_conta)
+            if conta:
+                valor = float(input("Informe o valor para depósito: "))
+                conta.depositar(valor)
+            else:
+                print("Conta não encontrada.")
+
+        elif opcao == "4":
+            numero_conta = input("Informe o número da conta: ")
+            conta = banco.buscar_conta(numero_conta)
+            if conta:
+                valor = float(input("Informe o valor para saque: "))
+                conta.sacar(valor)
+            else:
+                print("Conta não encontrada.")
+
+        elif opcao == "5":
+            numero_conta = input("Informe o número da conta: ")
+            conta = banco.buscar_conta(numero_conta)
+            if conta:
+                conta.extrato()
+            else:
+                print("Conta não encontrada.")
+
+        elif opcao == "6":
+            print("Saindo do sistema bancário.")
+            break
+
+        else:
+            print("Opção inválida! Tente novamente.")
+
+# Executar o menu
+menu()
