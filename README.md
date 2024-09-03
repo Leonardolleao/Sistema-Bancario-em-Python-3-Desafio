@@ -20,7 +20,5 @@ O objetivo deste desafio foi refatorar a implementação do sistema bancário pa
   - **Atributos**: `clientes`, `contas`
   - **Métodos**: `adicionar_cliente(cliente)`, `adicionar_conta(conta)`, `buscar_cliente(cpf)`, `buscar_conta(numero)`
 
-## Implementação
 
-### Classe `Cliente`
 
